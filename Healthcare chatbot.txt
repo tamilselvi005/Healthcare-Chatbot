@@ -1,0 +1,172 @@
+import java.util.*;
+
+class HealthcareChatbot {
+
+    private String name;
+    private String tabletName;
+    private Map<String, String> symptoms;
+    private List<String> greetings;
+    private List<String> farewells;
+    private List<String> thanks;
+    private List<String> defaults;
+
+    public HealthcareChatbot(String name, String tabletName) {
+        this.name = name;
+        this.tabletName = tabletName;
+
+        greetings = Arrays.asList(
+                "Hello! How can I help you today?",
+                "Hi there! What do you need assistance with?",
+                "Greetings! How can I assist you?"
+        );
+
+        farewells = Arrays.asList(
+                "Goodbye! Take care.",
+                "Have a great day!",
+                "Goodbye, stay healthy!"
+        );
+
+        thanks = Arrays.asList(
+                "You're welcome!",
+                "No problem!",
+                "My pleasure!"
+        );
+
+        defaults = Arrays.asList(
+                "I'm sorry, I didn't understand that.",
+                "Could you please repeat that?",
+                "I'm still learning!"
+        );
+
+        symptoms = new HashMap<>();
+
+symptoms.put("cough", "Cough could be a sign of respiratory infection. Rest and drink fluids.");
+symptoms.put("fever", "Fever may indicate an infection. Get plenty of rest and stay hydrated.");
+symptoms.put("headache", "Headaches can have many causes. Ensure you are well hydrated and consider taking pain relievers.");
+symptoms.put("sore throat", "A sore throat could be due to viral or bacterial infection. Gargle with warm salt water and rest.");
+symptoms.put("fatigue", "Fatigue can be caused by many factors. Ensure proper sleep and reduce stress.");
+symptoms.put("nausea", "Nausea may be due to digestive issues. Drink clear fluids and eat light foods.");
+symptoms.put("rash", "A rash could be an allergic reaction. Keep the area clean and apply soothing lotion.");
+symptoms.put("stomach pain", "Stomach pain could be due to indigestion. Avoid spicy foods and consider antacids.");
+symptoms.put("muscle ache", "Muscle aches could be from strain. Rest and do light stretching.");
+symptoms.put("dizziness", "Dizziness may indicate dehydration. Drink water and rest.");
+symptoms.put("shortness of breath", "This can be serious. Seek medical help immediately.");
+symptoms.put("chest pain", "Chest pain can indicate heart problems. Get emergency medical help now.");
+symptoms.put("back pain", "Back pain may be due to strain. Apply heat/cold and rest.");
+symptoms.put("joint pain", "Joint pain may indicate arthritis or strain. Rest and gentle exercise helps.");
+symptoms.put("difficulty swallowing", "This can indicate throat issues. Consult a doctor if persistent.");
+symptoms.put("vision problems", "Could indicate eye issues. Consult an eye specialist.");
+symptoms.put("depression", "Depression is serious. Seek professional support.");
+symptoms.put("anxiety", "Practice relaxation and talk to a counselor.");
+symptoms.put("diarrhea", "Drink plenty of fluids and eat soft foods.");
+symptoms.put("constipation", "Increase water and fiber intake.");
+symptoms.put("bruising", "Apply ice. See a doctor if frequent.");
+symptoms.put("insomnia", "Practice good sleep habits and relaxation.");
+symptoms.put("allergies", "Avoid allergens and try antihistamines.");
+symptoms.put("swollen glands", "May indicate infection. Rest and drink fluids.");
+symptoms.put("blurred vision", "Rest your eyes. Consult a doctor if it continues.");
+symptoms.put("earache", "May indicate infection. See a doctor if persistent.");
+symptoms.put("numbness", "May indicate nerve issues. Rest and consult a doctor.");
+symptoms.put("memory loss", "Consult a healthcare professional.");
+symptoms.put("palpitations", "Avoid caffeine and stress. Rest.");
+symptoms.put("hair loss", "Could be stress or hormones. Consult a dermatologist.");
+symptoms.put("weight loss", "Unexplained weight loss requires medical attention.");
+symptoms.put("weight gain", "Exercise regularly and maintain a balanced diet.");
+symptoms.put("burning sensation", "May indicate nerve or infection issues. See a doctor.");
+symptoms.put("excessive sweating", "Stay hydrated. Could be medical — check if persistent.");
+symptoms.put("irregular menstruation", "Consult a gynecologist for evaluation.");
+symptoms.put("weakness", "Ensure proper nutrition and rest.");
+symptoms.put("irritability", "Reduce stress and improve sleep.");
+symptoms.put("chest congestion", "Drink warm fluids and rest.");
+symptoms.put("swelling", "Apply cold compress and elevate the area.");
+symptoms.put("high blood pressure", "Monitor BP and follow medical advice.");
+symptoms.put("low blood pressure", "Increase fluids and salt (doctor guidance).");
+symptoms.put("muscle twitching", "Could be stress or electrolyte imbalance.");
+symptoms.put("difficulty breathing", "Seek medical help immediately.");
+symptoms.put("high blood sugar", "Monitor levels and follow doctor advice.");
+symptoms.put("low blood sugar", "Consume glucose or sweet food immediately.");
+symptoms.put("period pain", "Use heat pad and mild pain relievers.");
+
+
+        // Add more symptoms here if needed
+    }
+
+    public String respond(String message) {
+        String msg = message.toLowerCase();
+
+        if (checkGreeting(msg)) {
+            return getRandom(greetings);
+        } else if (checkFarewell(msg)) {
+            return getRandom(farewells);
+        } else if (checkThanks(msg)) {
+            return getRandom(thanks);
+        } else if (msg.contains("tablet")) {
+            return "The " + tabletName + " tablet is used to treat various health conditions.";
+        } else {
+            return checkSymptoms(msg);
+        }
+    }
+
+    private boolean checkGreeting(String msg) {
+        String[] greetWords = {"hello", "hi", "hey", "howdy", "greetings"};
+        return containsAny(msg, greetWords);
+    }
+
+    private boolean checkFarewell(String msg) {
+        String[] byeWords = {"bye", "goodbye", "see you", "take care"};
+        return containsAny(msg, byeWords);
+    }
+
+    private boolean checkThanks(String msg) {
+        String[] thankWords = {"thank", "thanks", "thank you"};
+        return containsAny(msg, thankWords);
+    }
+
+    private String checkSymptoms(String msg) {
+        for (String symptom : symptoms.keySet()) {
+            if (msg.contains(symptom)) {
+                return symptoms.get(symptom);
+            }
+        }
+        return getRandom(defaults);
+    }
+
+    private boolean containsAny(String msg, String[] words) {
+        for (String w : words) {
+            if (msg.contains(w)) return true;
+        }
+        return false;
+    }
+
+    private String getRandom(List<String> list) {
+        Random r = new Random();
+        return list.get(r.nextInt(list.size()));
+    }
+
+    public void chat() {
+        Scanner sc = new Scanner(System.in);
+        System.out.println(name + ": Hello! How can I help you today?");
+
+        while (true) {
+            System.out.print("You: ");
+            String userInput = sc.nextLine();
+
+            if (userInput.equalsIgnoreCase("exit")) {
+                System.out.println(name + ": Goodbye!");
+                break;
+            }
+
+            String response = respond(userInput);
+            System.out.println(name + ": " + response);
+        }
+
+        sc.close();
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        HealthcareChatbot chatbot = new HealthcareChatbot("HealthcareBot", "MediHealth");
+        chatbot.chat();
+    }
+}
